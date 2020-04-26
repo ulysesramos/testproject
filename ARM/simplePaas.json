@@ -1,0 +1,71 @@
+// Complete
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverfarmname": {
+          "type": "string",
+          "minLength": 1,
+          "defaultValue": "pldeepdive"
+        },
+        "serverfarmSKU": {
+            "type": "string",
+            "allowedValues": [
+                "Free",
+                "Shared",
+                "Basic",
+                "Standard"
+            ],
+            "defaultValue": "Free"
+        },
+        "serverfarmworkersize": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2"
+            ],
+            "defaultValue": "0"
+        }
+    },
+    "variables": {
+        "webappname": "[concat('pldeepdivename', uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('serverfarmname')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2014-06-01",
+            "dependsOn": [],
+            "tags": {
+              "displayName": "[parameters('serverfarmname')]"
+            },
+            "properties": {
+                "name": "[parameters('serverfarmname')]",
+                "sku": "[parameters('serverfarmSKU')]",
+                "workerSize": "[parameters('serverfarmWorkerSize')]",
+                "numberOfWorkers": 1
+            }
+        },
+        {
+          "name": "[variables('webappname')]",  
+          "type": "Microsoft.Web/sites",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+              "[concat('Microsoft.Web/serverfarms/', parameters('serverfarmname'))]"
+          ],
+          "tags": {
+            "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('serverfarmname'))]": "Resource",
+            "displayName": "[variables('webappname')]"
+          },
+          "properties": {
+              "name": "[variables('webappname')]",
+              "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('serverfarmname'))]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

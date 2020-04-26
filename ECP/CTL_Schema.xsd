@@ -1,0 +1,52 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="PinRules">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="PinRule" maxOccurs="unbounded" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Certificate" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:dateTime" name="EndDate" use="optional"/>
+                      <xs:attribute type="xs:string" name="File" use="optional"/>
+                      <xs:attribute type="xs:string" name="Directory" use="optional"/>
+                      <xs:attribute type="xs:base64Binary" name="Base64" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Site" maxOccurs="unbounded" minOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="Domain"/>
+                      <xs:attribute type="xs:boolean" name="AllSubdomains" use="optional" default="false"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="Name"/>
+            <xs:attribute name="Error" use="optional" default="None">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value ="Revoked"/>
+                  <xs:enumeration value ="InvalidName"/>
+                  <xs:enumeration value ="None"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute type="xs:boolean" name="Log" use="optional" default="true"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute type="xs:duration" name="Duration" use="optional"/>
+      <xs:attribute type="xs:duration" name="LogDuration" use="optional"/>
+      <xs:attribute type="xs:dateTime" name="NextUpdate" use="optional"/>
+      <xs:attribute type="xs:dateTime" name="LogEndDate" use="optional"/>
+      <xs:attribute type="xs:string" name="ListIdentifier" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
